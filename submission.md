@@ -144,3 +144,15 @@ flowchart TD
 
 * **Generated Migration File Link**: https://github.com/NU-CS-Software-Studio-Spring-26/homework-5-davidgerchik2027-northwestern/blob/hw5/db/migrate/20260528021039_add_done_and_user_to_todos.rb
 
+* **Note on Local Migration Bugfix**: The initial migration failed locally due to an unfulfilled SQLite foreign key constraint on a non-existent `users` table. Fixed by setting `foreign_key: false` in the migration file to allow local schema execution without authentication infrastructure.
+
+### 4. Bad -> Good Prompt Rewrite
+
+* **Deliberately Bad Prompt:** "fix the bug in todos"
+
+* **Engineered Good Prompt:**
+  1. **Context:** `app/models/todo.rb` and `test/models/todo_test.rb`.
+  2. **Task:** Implement a model validation that prevents a Todo title from being blank or containing only whitespace characters.
+  3. **Expected vs. Actual:** Currently, saving a todo with a title of `"   "` passes validation and creates an empty row in the UI. It should instead fail validation and append an error message (`"can't be blank"`) to the `:title` attribute.
+  4. **Constraints:** Use standard Rails ActiveRecord validations. Do not add external gems to the Gemfile. Keep modifications strictly isolated to the model file.
+  5. **Done When:** Running `bin/rails test test/models/todo_test.rb` passes successfully with a new automated test asserting that whitespace-only titles are rejected.
