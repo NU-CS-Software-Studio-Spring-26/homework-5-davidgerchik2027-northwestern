@@ -1,0 +1,14 @@
+.env
+.env.*
+config/master.key
+config/credentials/*.key
+tmp/
+log/
+storage/
+node_modules/
+vendor/
+Gemfile.lock
+db/schema.rb
+public/
+.kamal/
+.github/
