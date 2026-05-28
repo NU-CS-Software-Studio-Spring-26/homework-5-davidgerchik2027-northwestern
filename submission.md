@@ -172,3 +172,67 @@ flowchart TD
 * **MIME Type**: `text/vnd.turbo-stream.html`
 * **How it works**: Instead of a full HTML document, a Turbo Stream delivers specific, modular `<turbo-stream>` fragments matching one of seven core actions (like `replace`, `append`, or `update`). The browser intercepts this specific MIME type and updates only the DOM node matching the target ID, preventing a full browser refresh.
 * **Verified Factor**: Verified that Rails automatically looks for `action_name.turbo_stream.erb` matching the controller action when `format.turbo_stream` is invoked inside a `respond_to` block.
+
+
+### 2. Story Acceptance Criteria
+
+* **User Story**: As a user managing tasks, I want to toggle a todo's priority state directly from the index list without the entire page reloading, so that I can quickly organize my tasks efficiently.
+* **Locked Criteria**:
+  - Todo has a `high_priority` boolean column.
+  - The index page displays a clickable toggle on every row.
+  - Clicking the toggle triggers a background PATCH request returning a `text/vnd.turbo-stream.html` response.
+  - Only the target row or toggle button updates in the DOM.
+
+
+### 3. Plan Mode (Blueprint)
+
+**Exact Prompt Used:**
+> "Plan the end-to-end implementation for the high_priority toggle feature following the acceptance criteria. Propose a plan as a numbered list of changes split into approximately three logical commits: (a) migration and model attribute, (b) route and controller action, (c) Turbo Stream view and toggle button form. Do not write code yet."
+
+**Final Plan Approved:**
+1. **Commit 1 (Migration & Model)**: Generate a migration adding `high_priority` (boolean, default: false, null: false), run `bin/rails db:migrate`, and update fixtures.
+2. **Commit 2 (Route & Controller)**: Add a custom member patch route for `:toggle_priority` and create a matching controller action that updates the model and responds via `format.turbo_stream`. Add an automated controller test asserting the `text/vnd.turbo-stream.html` media type response.
+3. **Commit 3 (View & Toggle UI)**: Create `app/views/todos/toggle_priority.turbo_stream.erb` using `turbo_stream.replace` to cleanly swap the target row DOM element, and add a reactive `button_to` element inside `app/views/todos/_todo.html.erb`.
+
+
+### 6. Part 4 Browser DevTools Verification
+
+**Captured Response Headers:**
+* `content-type`: `text/vnd.turbo-stream.html; charset=utf-8`
+* `vary`: `Accept`
+* `x-runtime`: `0.023416`
+
+**Verification Confirmation:**
+Confirmed via Chrome DevTools that the network layer returns the precise `text/vnd.turbo-stream.html` MIME type. The page handles the star toggle instantly without navigating or refreshing the document.
+
+
+### 2. Story Acceptance Criteria
+
+* **User Story**: As a user managing tasks, I want to toggle a todo's priority state directly from the index list without the entire page reloading, so that I can quickly organize my tasks efficiently.
+* **Locked Criteria**:
+  - Todo has a `high_priority` boolean column.
+  - The index page displays a clickable toggle on every row.
+  - Clicking the toggle triggers a background PATCH request returning a `text/vnd.turbo-stream.html` response.
+  - Only the target row or toggle button updates in the DOM.
+
+
+### 3. Plan Mode (Blueprint)
+
+**Exact Prompt Used:**
+> "Plan the end-to-end implementation for the high_priority toggle feature following the acceptance criteria. Propose a plan as a numbered list of changes split into approximately three logical commits: (a) migration and model attribute, (b) route and controller action, (c) Turbo Stream view and toggle button form. Do not write code yet."
+
+**Final Plan Approved:**
+1. **Commit 1 (Migration & Model)**: Generate a migration adding `high_priority` (boolean, default: false, null: false), run `bin/rails db:migrate`, and update fixtures.
+2. **Commit 2 (Route & Controller)**: Add a custom member patch route for `:toggle_priority` and create a matching controller action that updates the model and responds via `format.turbo_stream`. Add an automated controller test asserting the `text/vnd.turbo-stream.html` media type response.
+3. **Commit 3 (View & Toggle UI)**: Create `app/views/todos/toggle_priority.turbo_stream.erb` using `turbo_stream.replace` to cleanly swap the target row DOM element, and add a reactive `button_to` element inside `app/views/todos/_todo.html.erb`.
+
+
+### 6. Part 4 Browser DevTools Verification
+
+**Captured Response Headers:**
+* `content-type`: `text/vnd.turbo-stream.html; charset=utf-8`
+* `vary`: `Accept`
+* `x-runtime`: `0.023416`
+
+**Verification Confirmation:**
+Confirmed via Chrome DevTools that the network layer returns the precise `text/vnd.turbo-stream.html` MIME type. The page handles the star toggle instantly without navigating or refreshing the document.
