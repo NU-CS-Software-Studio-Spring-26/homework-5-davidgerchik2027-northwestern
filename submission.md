@@ -156,3 +156,19 @@ flowchart TD
   3. **Expected vs. Actual:** Currently, saving a todo with a title of `"   "` passes validation and creates an empty row in the UI. It should instead fail validation and append an error message (`"can't be blank"`) to the `:title` attribute.
   4. **Constraints:** Use standard Rails ActiveRecord validations. Do not add external gems to the Gemfile. Keep modifications strictly isolated to the model file.
   5. **Done When:** Running `bin/rails test test/models/todo_test.rb` passes successfully with a new automated test asserting that whitespace-only titles are rejected.
+
+---
+
+## Part 4: Turbo Streams Feature Execution
+
+### 1. Turbo Streams Investigation & Verification
+
+**AI-Assisted Workspace Scan:**
+* **Existing Streams**: None currently present in application code.
+* **Target Controller Location**: `app/controllers/todos_controller.rb` inside a new `toggle_priority` action.
+* **Target View Path**: `app/views/todos/toggle_priority.turbo_stream.erb`
+
+**Technical Explanation & Handbook Verification:**
+* **MIME Type**: `text/vnd.turbo-stream.html`
+* **How it works**: Instead of a full HTML document, a Turbo Stream delivers specific, modular `<turbo-stream>` fragments matching one of seven core actions (like `replace`, `append`, or `update`). The browser intercepts this specific MIME type and updates only the DOM node matching the target ID, preventing a full browser refresh.
+* **Verified Factor**: Verified that Rails automatically looks for `action_name.turbo_stream.erb` matching the controller action when `format.turbo_stream` is invoked inside a `respond_to` block.
