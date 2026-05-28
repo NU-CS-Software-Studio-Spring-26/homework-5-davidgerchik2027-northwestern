@@ -1,5 +1,5 @@
 class TodosController < ApplicationController
-  before_action :set_todo, only: %i[ show edit update destroy ]
+  before_action :set_todo, only: %i[ show edit update destroy toggle_priority ]
 
   # GET /todos or /todos.json
   def index
@@ -61,6 +61,15 @@ class TodosController < ApplicationController
     respond_to do |format|
       format.html { render :hello }
       format.json { render json: "hello world!" }
+    end
+  end
+
+  def toggle_priority
+    @todo.update!(high_priority: !@todo.high_priority)
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to todos_path }
     end
   end
 
